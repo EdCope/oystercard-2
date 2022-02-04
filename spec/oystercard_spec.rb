@@ -3,7 +3,10 @@ require 'oystercard.rb'
 describe Oystercard do
   let(:entry_station) { double :station }
   let(:exit_station) { double :station }
-  let(:journey) { { entry_station: entry_station, exit_station: exit_station } }
+  #let(:journey) { { entry_station: entry_station, exit_station: exit_station } }
+  let(:journey) { double :journey }
+
+  
 
   it 'should have a balance of zero' do
     expect(subject.balance).to eq(0)
@@ -34,6 +37,7 @@ describe Oystercard do
 
     it 'stores a journey' do
       subject.top_up(Oystercard::MIN_BALANCE)
+      allow(journey).to receive(:entry_station).and_return(entry_station)
       subject.touch_in(entry_station)
       subject.touch_out(exit_station)
       expect(subject.list_of_journeys).to include journey
@@ -47,14 +51,14 @@ describe Oystercard do
 
     it 'can store the entry station on the card' do
       subject.top_up(Oystercard::MIN_BALANCE)
-      subject.touch_in(entry_station)
+      subject.touch_in(entry_station, )
       expect(subject.entry_station).to eq entry_station
     end
 
     it 'can touch out' do
       subject.top_up(Oystercard::MIN_BALANCE)
       subject.touch_in(entry_station)
-      subject.touch_out(exit_station)
+      subject.touch_out(exit_station, journey)
       expect(subject).not_to be_in_journey
     end
 
